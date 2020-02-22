@@ -15,6 +15,9 @@
 #include "proc.h"
 #include "x86.h"
 
+char* inp_history[10];
+int last = 0;
+
 static void consputc(int);
 
 static int panicked = 0;
@@ -214,8 +217,34 @@ consoleintr(int (*getc)(void))
       }
       break;
     case C('R'):
-      for(int i = 0; i < 50; i++)
-        consputc('\n');
+      //for(int i = 0; i < 50; i++)
+        //consputc('\n');
+        for(int i = 0; i < input.e;i++)
+          input.buf[i] = ' ';
+      break;
+    /*case C('T'):
+      consputc(inp_history[0][0]);
+      consputc('\n');*/
+    case (9):
+      if(last == 0)
+        break;
+      else{
+        for(int i = last-1; i >= 0; i--){
+          int flag = 0;
+          for(int j = 0; j < input.e; j++){
+            if(input.buf[j] != inp_history[i][j]){
+              flag = 1;
+            } 
+          }
+          if(flag == 0){
+            //for(int k = 0; k < 2;k++){
+              //consputc('a');
+              //input.e++;
+            //}
+            flag = 1;
+          }
+        }
+      }
       break;
     default:
       if(c != 0 && input.e-input.r < INPUT_BUF){
@@ -265,8 +294,20 @@ consoleread(struct inode *ip, char *dst, int n)
     }
     *dst++ = c;
     --n;
-    if(c == '\n')
+    if(c == '\n'){
+      //inp_history[0] = input.buf;
+      if(last!=10){
+        inp_history[9] = input.buf;
+        last++;
+      }
+      else{
+        for(int i = 0; i < 9; i++){
+          inp_history[i] = inp_history[i + 1];
+        }
+        inp_history[9] = input.buf;
+      }
       break;
+    }
   }
   release(&cons.lock);
   ilock(ip);
