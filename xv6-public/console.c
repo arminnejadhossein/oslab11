@@ -217,10 +217,10 @@ consoleintr(int (*getc)(void))
       }
       break;
     case C('R'):
-      //for(int i = 0; i < 50; i++)
-        //consputc('\n');
-        for(int i = 0; i < input.e;i++)
-          input.buf[i] = ' ';
+      for(int i = 0; i < 30; i++)
+        consputc('\n');
+      consputc('$');
+      consputc(' ');
       break;
     /*case C('T'):
       consputc(inp_history[0][0]);
@@ -238,10 +238,9 @@ consoleintr(int (*getc)(void))
           }
           if(flag == 0){
             //for(int k = 0; k < 2;k++){
-              //consputc('a');
+              consputc(BACKSPACE);
               //input.e++;
             //}
-            flag = 1;
           }
         }
       }
